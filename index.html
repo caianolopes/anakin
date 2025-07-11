@@ -25,8 +25,17 @@
 </head>
 <body class="bg-stone-100 text-stone-800">
 
-    <!-- GitHub Settings Modal -->
-    <div id="github-settings-modal" class="modal-backdrop">
+    <!-- Video Splash Screen -->
+    <div id="splash-screen" class="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <video id="intro-video" autoplay muted playsinline class="w-full h-full object-cover">
+            <source src="abertura.mp4" type="video/mp4">
+            Seu navegador não suporta o vídeo de abertura.
+        </video>
+        <button id="skip-intro-btn" class="absolute bottom-5 right-5 px-4 py-2 bg-white bg-opacity-20 text-white rounded hover:bg-opacity-40 transition-colors backdrop-blur-sm">Pular Abertura</button>
+    </div>
+
+    <!-- GitHub Settings Modal (initially hidden) -->
+    <div id="github-settings-modal" class="modal-backdrop hidden">
         <div class="modal-content w-full max-w-lg">
             <h2 class="text-2xl font-bold mb-4">Configuração do GitHub</h2>
             <p class="text-sm text-stone-600 mb-4">Para salvar seus dados no seu repositório, a aplicação precisa de um Token de Acesso Pessoal (PAT). Siga as instruções abaixo.</p>
@@ -99,6 +108,30 @@
     </div>
 
     <script type="module">
+        // --- Splash Screen Logic ---
+        const splashScreen = document.getElementById('splash-screen');
+        const githubSettingsModal = document.getElementById('github-settings-modal');
+        const introVideo = document.getElementById('intro-video');
+        const skipIntroBtn = document.getElementById('skip-intro-btn');
+
+        function enterApp() {
+            if (!splashScreen.classList.contains('hidden')) {
+                splashScreen.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                    // Show settings modal after video
+                    githubSettingsModal.classList.remove('hidden');
+                }, 500);
+            }
+        }
+
+        introVideo.addEventListener('ended', enterApp);
+        skipIntroBtn.addEventListener('click', enterApp);
+        introVideo.addEventListener('error', () => {
+            console.log("Video could not be loaded. Entering app directly.");
+            enterApp();
+        });
+
         // --- GitHub API Logic ---
         const GITHUB_API_URL = 'https://api.github.com';
         const DATA_FILE_PATH = 'dados.json';
@@ -119,13 +152,13 @@
                 });
                 if (response.status === 404) {
                     setStatus('Arquivo de dados não encontrado. Usando dados padrão.');
-                    return null; // File doesn't exist, use default data
+                    return null;
                 }
                 if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
                 const data = await response.json();
                 githubConfig.fileSha = data.sha;
                 setStatus('Dados carregados com sucesso!');
-                return JSON.parse(atob(data.content)); // Decode Base64 content
+                return JSON.parse(atob(data.content));
             } catch (error) {
                 console.error('Falha ao carregar dados do GitHub:', error);
                 setStatus(`Erro ao carregar: ${error.message}`, true);
@@ -136,26 +169,23 @@
         async function saveDataToGitHub() {
             setStatus('Salvando no GitHub...');
             const { user, repo, token, fileSha } = githubConfig;
-            const content = btoa(JSON.stringify(appData)); // Encode to Base64
+            const content = btoa(JSON.stringify(appData, null, 2)); // Prettify JSON
 
             const body = {
                 message: `Atualização de dados da calculadora - ${new Date().toISOString()}`,
                 content: content,
-                sha: fileSha // Required for updates
+                sha: fileSha
             };
 
             try {
                 const response = await fetch(`${GITHUB_API_URL}/repos/${user}/${repo}/contents/${DATA_FILE_PATH}`, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 });
                 if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
                 const result = await response.json();
-                githubConfig.fileSha = result.content.sha; // Update SHA for next save
+                githubConfig.fileSha = result.content.sha;
                 setStatus('Salvo com sucesso!');
                 alert('Dados salvos com sucesso no seu repositório do GitHub!');
             } catch (error) {
@@ -170,7 +200,7 @@
         const DEFAULT_ITENS_DATABASE = { "modelo1": [ {'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO']}, {'desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO']}, {'desc': 'PERNIL LIMPO', 'cod': '196/0', 'linkedPesoKeys': ['PERNIL SEM OSSO']}, {'desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO']}, {'desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA']}, {'desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO']}, {'desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA']}, {'desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA']}, {'desc': 'TOUCINHO', 'cod': '201/1', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA']} ], "modelo2": [ {'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO']}, {'desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO']}, {'desc': 'PERNIL COM OSSO E TOUCINHO', 'cod': '1819/7', 'linkedPesoKeys': ['PERNIL COM OSSO E TOUCINHO']}, {'desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO']}, {'desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA']}, {'desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO']}, {'desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA']}, {'desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA']}, {'desc': 'TOUCINHO DA COSTELINHA', 'cod': '201/1c', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA']} ], "boi": [ {'desc': 'MÚSCULO', 'cod': '175/5', 'precoPago': 25.49}, {'desc': 'CHÃ DE DENTRO', 'cod': '173/1', 'precoPago': 30.99}, {'desc': 'ALCATRA C/ MAMINHA', 'cod': '944/7', 'precoPago': 31.99}, ] };
         let appData = {};
         
-        // --- The rest of your app logic (unchanged) ---
+        // --- The rest of your app logic ---
         let totalLiquidoCustoValor = 0.0;
         const formatCurrency = (value) => `R$ ${Number(value).toFixed(2).replace('.', ',')}`;
         const formatNumber = (value) => Number(value).toFixed(3).replace('.', ',');
@@ -195,7 +225,6 @@
         
         // --- Initial Load & Event Listeners ---
         async function initializeApp() {
-            // Load settings from localStorage
             const savedConfig = localStorage.getItem('githubConfig');
             if (savedConfig) {
                 githubConfig = JSON.parse(savedConfig);
@@ -214,14 +243,12 @@
                     return;
                 }
                 
-                // Save config to localStorage for next time
                 localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
 
                 const loadedData = await loadDataFromGitHub();
                 if (loadedData) {
                     appData = loadedData;
                 } else {
-                    // Use default data if no file was found on GitHub
                     appData = { pesos_carnes: { ...DEFAULT_PESOS_DATABASE }, itens_database: JSON.parse(JSON.stringify(DEFAULT_ITENS_DATABASE)), item_config: {}, cost_inputs: { suino_peso: "47,200", suino_pr_unit: "12,00", st_percent: "6,05", fator: "92,00" } };
                     Object.values(appData.itens_database).flat().forEach(item => { const safe_cod = item.cod.replace(/\//g, '-'); if (!appData.item_config[safe_cod]) appData.item_config[safe_cod] = { prUnit: 0.0 }; if (item.precoPago && !appData.item_config[safe_cod].precoVenda) appData.item_config[safe_cod].precoVenda = 0.0; });
                 }
