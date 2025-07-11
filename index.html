@@ -17,10 +17,9 @@
         .modal-content {
             background-color: white; border-radius: 0.5rem;
             padding: 1.5rem; max-height: 90vh; overflow-y: auto;
-            min-width: 500px; max-width: 95%;
+            width: 95%; max-width: 600px;
         }
         .hidden { display: none !important; }
-        .tab-button.active { background-color: white; border-color: #e5e7eb; font-weight: 600; }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800">
@@ -39,22 +38,11 @@
         <div class="modal-content w-full max-w-lg">
             <h2 class="text-2xl font-bold mb-4">Configuração do GitHub</h2>
             <p class="text-sm text-stone-600 mb-4">Para salvar seus dados no seu repositório, a aplicação precisa de um Token de Acesso Pessoal (PAT). Siga as instruções abaixo.</p>
-            
             <div class="space-y-4">
-                <div>
-                    <label for="github-user" class="block text-sm font-medium text-stone-700">Seu nome de usuário no GitHub</label>
-                    <input type="text" id="github-user" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm">
-                </div>
-                <div>
-                    <label for="github-repo" class="block text-sm font-medium text-stone-700">Nome do Repositório</label>
-                    <input type="text" id="github-repo" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm">
-                </div>
-                <div>
-                    <label for="github-token" class="block text-sm font-medium text-stone-700">Token de Acesso Pessoal (PAT)</label>
-                    <input type="password" id="github-token" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm">
-                </div>
+                <div><label for="github-user" class="block text-sm font-medium text-stone-700">Seu nome de usuário no GitHub</label><input type="text" id="github-user" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm"></div>
+                <div><label for="github-repo" class="block text-sm font-medium text-stone-700">Nome do Repositório</label><input type="text" id="github-repo" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm"></div>
+                <div><label for="github-token" class="block text-sm font-medium text-stone-700">Token de Acesso Pessoal (PAT)</label><input type="password" id="github-token" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm"></div>
             </div>
-
             <div class="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                 <h4 class="font-semibold text-yellow-800">Como gerar seu Token:</h4>
                 <ol class="list-decimal list-inside text-sm text-yellow-700 mt-2">
@@ -66,39 +54,30 @@
                     <li>Clique em "Generate token" e copie o token gerado. Cole-o no campo acima.</li>
                 </ol>
             </div>
-
-            <div class="flex justify-end mt-6">
-                <button id="connect-github-btn" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">Conectar e Carregar Dados</button>
-            </div>
+            <div class="flex justify-end mt-6"><button id="connect-github-btn" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700">Conectar e Carregar Dados</button></div>
         </div>
     </div>
 
     <!-- App Container (initially hidden) -->
     <div id="app-container" class="hidden">
-        <header class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
-            <h1 class="text-2xl font-bold text-stone-900">Calculadora de Preços</h1>
+        <header class="bg-white shadow-md p-4 flex flex-col sm:flex-row justify-between items-center sticky top-0 z-10 gap-3">
+            <h1 class="text-xl sm:text-2xl font-bold text-stone-900">Calculadora de Preços</h1>
             <div class="flex items-center space-x-2">
                  <div id="status-indicator" class="text-sm text-gray-500 mr-4"></div>
                 <button id="manage-pesos-btn" class="px-3 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 text-sm">Gerenciar Pesos</button>
-                <button id="manage-cortes-btn" class="px-3 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 text-sm">Gerenciar Cortes</button>
                 <button id="save-button" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 shadow-sm">Salvar no GitHub</button>
             </div>
         </header>
 
-        <main class="p-4 md:p-8 space-y-8">
-            <!-- Content will be rendered here -->
-            <section class="bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2">Cálculo de Custo do Suíno</h2>
-                <div id="cost-calculator-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </section>
-            <section>
-                 <h2 class="text-2xl font-bold mb-4">Tabelas de Suínos</h2>
-                <div id="suino-tables-container" class="grid grid-cols-1 xl:grid-cols-2 gap-8"></div>
-            </section>
-            <section>
-                <h2 class="text-2xl font-bold mb-4">Tabela de Bovinos</h2>
-                <div id="boi-table-container" class="bg-white p-4 rounded-lg shadow-lg overflow-x-auto"></div>
-            </section>
+        <main class="p-4 md:p-8">
+            <div id="sheets-container" class="space-y-8">
+                <!-- As fichas de cálculo serão renderizadas aqui -->
+            </div>
+            <div class="mt-8 text-center">
+                <button id="add-sheet-btn" class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 shadow-lg transition-transform hover:scale-105">
+                    + Adicionar Nova Ficha de Cálculo
+                </button>
+            </div>
         </main>
     </div>
 
@@ -108,41 +87,15 @@
     </div>
 
     <script type="module">
-        // --- Splash Screen Logic ---
-        const splashScreen = document.getElementById('splash-screen');
-        const githubSettingsModal = document.getElementById('github-settings-modal');
-        const introVideo = document.getElementById('intro-video');
-        const skipIntroBtn = document.getElementById('skip-intro-btn');
-
-        function enterApp() {
-            if (!splashScreen.classList.contains('hidden')) {
-                splashScreen.classList.add('opacity-0', 'transition-opacity', 'duration-500');
-                setTimeout(() => {
-                    splashScreen.classList.add('hidden');
-                    // Show settings modal after video
-                    githubSettingsModal.classList.remove('hidden');
-                }, 500);
-            }
-        }
-
-        introVideo.addEventListener('ended', enterApp);
-        skipIntroBtn.addEventListener('click', enterApp);
-        introVideo.addEventListener('error', () => {
-            console.log("Video could not be loaded. Entering app directly.");
-            enterApp();
-        });
-
         // --- GitHub API Logic ---
         const GITHUB_API_URL = 'https://api.github.com';
         const DATA_FILE_PATH = 'dados.json';
         let githubConfig = { user: '', repo: '', token: '', fileSha: null };
-
         const statusIndicator = document.getElementById('status-indicator');
         const setStatus = (message, isError = false) => {
             statusIndicator.textContent = message;
             statusIndicator.className = isError ? 'text-sm text-red-500' : 'text-sm text-gray-500';
         };
-
         async function loadDataFromGitHub() {
             setStatus('Carregando dados do GitHub...');
             const { user, repo, token } = githubConfig;
@@ -165,18 +118,15 @@
                 return null;
             }
         }
-
         async function saveDataToGitHub() {
             setStatus('Salvando no GitHub...');
             const { user, repo, token, fileSha } = githubConfig;
-            const content = btoa(JSON.stringify(appData, null, 2)); // Prettify JSON
-
+            const content = btoa(JSON.stringify(appData, null, 2));
             const body = {
                 message: `Atualização de dados da calculadora - ${new Date().toISOString()}`,
                 content: content,
                 sha: fileSha
             };
-
             try {
                 const response = await fetch(`${GITHUB_API_URL}/repos/${user}/${repo}/contents/${DATA_FILE_PATH}`, {
                     method: 'PUT',
@@ -197,73 +147,385 @@
         
         // --- Default Data Structures ---
         const DEFAULT_PESOS_DATABASE = { "CABEÇA COMPLETA COM PA": 2.850, "CABEÇA SEM PAPADA": 1.700, "PÉ COM JOELHO": 2.550, "PÉ": 1.050, "JOELHO": 1.500, "ORELHA": 0.250, "ORELHA COM PAPADA": 1.150, "PAPADA": 0.900, "PÁ COM OSSO E TOUCINHO": 12.100, "PÁ SEM OSSO": 8.200, "CARRÉ COM OSSO E TOUCINHO": 6.550, "TOUCINHO DO CARRÉ": 0.850, "OSSO DO CARRÉ": 1.450, "CARRÉ SEM OSSO LOMBO": 3.400, "PERNIL COM OSSO E TOUCINHO": 12.600, "TOUCINHO DO PERNIL": 1.050, "PERNIL SEM OSSO": 10.050, "COSTELINHA SUINA COM TC": 7.400, "TOUCINHO DA COSTELINHA": 1.450, "COSTELINHA SEM TOUCINHO": 6.000, "BARRIGUINHA": 2.550, "PERNIL SUJO": 11.185, "PÁ SUJA": 10.275, "CARRÉ SUJO": 7.3, "LOMBO LIMPO": 3.55 };
-        const DEFAULT_ITENS_DATABASE = { "modelo1": [ {'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO']}, {'desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO']}, {'desc': 'PERNIL LIMPO', 'cod': '196/0', 'linkedPesoKeys': ['PERNIL SEM OSSO']}, {'desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO']}, {'desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA']}, {'desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO']}, {'desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA']}, {'desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA']}, {'desc': 'TOUCINHO', 'cod': '201/1', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA']} ], "modelo2": [ {'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO']}, {'desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO']}, {'desc': 'PERNIL COM OSSO E TOUCINHO', 'cod': '1819/7', 'linkedPesoKeys': ['PERNIL COM OSSO E TOUCINHO']}, {'desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO']}, {'desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA']}, {'desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO']}, {'desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA']}, {'desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA']}, {'desc': 'TOUCINHO DA COSTELINHA', 'cod': '201/1c', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA']} ], "boi": [ {'desc': 'MÚSCULO', 'cod': '175/5', 'precoPago': 25.49}, {'desc': 'CHÃ DE DENTRO', 'cod': '173/1', 'precoPago': 30.99}, {'desc': 'ALCATRA C/ MAMINHA', 'cod': '944/7', 'precoPago': 31.99}, ] };
-        let appData = {};
+        const createDefaultSheet = (title, type = 'suino', items = []) => ({
+            id: `sheet_${Date.now()}_${Math.random()}`,
+            title: title,
+            type: type,
+            cost_inputs: { peso_materia_prima: "100,000", preco_unit_materia_prima: "10,00", st_percent: "6,05", fator_rendimento: "92,00" },
+            items: items.length > 0 ? items : [
+                { id: `item_${Date.now()}`, desc: 'Exemplo de Corte 1', cod: '001', linkedPesoKeys: [], prUnit: 0 },
+                { id: `item_${Date.now()+1}`, desc: 'Exemplo de Corte 2', cod: '002', linkedPesoKeys: [], prUnit: 0 }
+            ]
+        });
+        const getInitialSheets = () => [
+            createDefaultSheet("Modelo 1 (Suíno)", 'suino', [
+                {'id': 'item_m1_1', 'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m1_2','desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m1_3','desc': 'PERNIL LIMPO', 'cod': '196/0', 'linkedPesoKeys': ['PERNIL SEM OSSO'], prUnit: 0}, 
+                {'id': 'item_m1_4','desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m1_5','desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA'], prUnit: 0}, 
+                {'id': 'item_m1_6','desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO'], prUnit: 0}, 
+                {'id': 'item_m1_7','desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA'], prUnit: 0}, 
+                {'id': 'item_m1_8','desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA'], prUnit: 0}, 
+                {'id': 'item_m1_9','desc': 'TOUCINHO', 'cod': '201/1', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA'], prUnit: 0}
+            ]),
+            createDefaultSheet("Modelo 2 (Suíno)", 'suino', [
+                {'id': 'item_m2_1', 'desc': 'PÁ COM OSSO E TOUCINHO', 'cod': '1366/6', 'linkedPesoKeys': ['PÁ COM OSSO E TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m2_2','desc': 'CARRÉ COM OSSO E TOUCINHO', 'cod': '913/3', 'linkedPesoKeys': ['CARRÉ COM OSSO E TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m2_3','desc': 'PERNIL COM OSSO E TOUCINHO', 'cod': '1819/7', 'linkedPesoKeys': ['PERNIL COM OSSO E TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m2_4','desc': 'COSTELINHA SUÍNA LIMPA', 'cod': '199/1', 'linkedPesoKeys': ['COSTELINHA SEM TOUCINHO'], prUnit: 0}, 
+                {'id': 'item_m2_5','desc': 'CABEÇA', 'cod': '209/4', 'linkedPesoKeys': ['CABEÇA SEM PAPADA'], prUnit: 0}, 
+                {'id': 'item_m2_6','desc': 'PÉ COM JOELHO', 'cod': '208/0', 'linkedPesoKeys': ['PÉ COM JOELHO'], prUnit: 0}, 
+                {'id': 'item_m2_7','desc': 'ORELHA COM PAPADA', 'cod': '67990/9', 'linkedPesoKeys': ['ORELHA COM PAPADA'], prUnit: 0}, 
+                {'id': 'item_m2_8','desc': 'BARRIGUINHA', 'cod': '1367/3', 'linkedPesoKeys': ['BARRIGUINHA'], prUnit: 0}, 
+                {'id': 'item_m2_9','desc': 'TOUCINHO DA COSTELINHA', 'cod': '201/1c', 'linkedPesoKeys': ['TOUCINHO DO CARRÉ', 'TOUCINHO DO PERNIL', 'TOUCINHO DA COSTELINHA'], prUnit: 0}
+            ]),
+            {
+                id: 'sheet_boi_caixaria',
+                title: 'Boi Caixaria',
+                type: 'boi_caixaria',
+                items: [
+                    { id: 'boi_1', 'desc': 'MÚSCULO', 'cod': '175/5', 'precoPago': 25.49, 'precoVenda': 0 },
+                    { id: 'boi_2', 'desc': 'CHÃ DE DENTRO', 'cod': '173/1', 'precoPago': 30.99, 'precoVenda': 0 },
+                    { id: 'boi_3', 'desc': 'ALCATRA C/ MAMINHA', 'cod': '944/7', 'precoPago': 31.99, 'precoVenda': 0 },
+                ]
+            }
+        ];
+
+        let appData = { pesos_carnes: {}, sheets: [] };
         
-        // --- The rest of your app logic ---
-        let totalLiquidoCustoValor = 0.0;
+        // --- Utility Functions ---
         const formatCurrency = (value) => `R$ ${Number(value).toFixed(2).replace('.', ',')}`;
         const formatNumber = (value) => Number(value).toFixed(3).replace('.', ',');
         const parseFloatBR = (str) => parseFloat(String(str).replace(/\./g, '').replace(',', '.')) || 0;
+        
+        // --- Modal Logic ---
         const modalContainer = document.getElementById('modal-container');
         const modalContent = document.getElementById('modal-content');
         const showModal = (content) => { modalContent.innerHTML = content; modalContainer.classList.remove('hidden'); };
         const hideModal = () => modalContainer.classList.add('hidden');
         modalContainer.addEventListener('click', (e) => { if (e.target === modalContainer) hideModal(); });
-        const render = () => { calculateCost(); buildCostCalculator(); buildAllSuinoTables(); buildBoiTable(); };
-        const calculateCost = () => { const { suino_peso, suino_pr_unit, st_percent, fator } = appData.cost_inputs; const peso = parseFloatBR(suino_peso); const pr_unit = parseFloatBR(suino_pr_unit); const st = parseFloatBR(st_percent); const fat = parseFloatBR(fator); const suino_total = peso * pr_unit; const st_total = suino_total * (st / 100.0); const custo_com_st = suino_total + st_total; totalLiquidoCustoValor = (fat !== 0) ? (custo_com_st / fat) * 100.0 : 0; };
-        const buildCostCalculator = () => { const container = document.getElementById('cost-calculator-container'); container.innerHTML = ''; const createInput = (id, label, value) => { const div = document.createElement('div'); div.innerHTML = `<label for="${id}" class="block text-sm font-medium text-stone-700">${label}</label><input type="text" id="${id}" value="${value}" class="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm">`; div.querySelector('input').addEventListener('change', (e) => { appData.cost_inputs[id] = e.target.value; render(); }); return div; }; container.appendChild(createInput('suino_peso', 'Peso Suíno (Kg)', appData.cost_inputs.suino_peso)); container.appendChild(createInput('suino_pr_unit', 'Preço Unitário (R$)', appData.cost_inputs.suino_pr_unit)); container.appendChild(createInput('st_percent', 'ST (%)', appData.cost_inputs.st_percent)); container.appendChild(createInput('fator', 'Fator (%)', appData.cost_inputs.fator)); const resultsContainer = document.createElement('div'); resultsContainer.className = "md:col-span-2 lg:col-span-4 mt-4 pt-4 border-t"; resultsContainer.innerHTML = `<div class="flex justify-end items-center text-lg font-bold"><span class="text-stone-600 mr-4">TOTAL LÍQUIDO CUSTO:</span><span class="text-indigo-700">${formatCurrency(totalLiquidoCustoValor)}</span></div>`; container.appendChild(resultsContainer); };
-        const buildSuinoTable = (modelKey, title) => { const items = appData.itens_database[modelKey] || []; const container = document.createElement('div'); container.className = 'bg-white p-4 rounded-lg shadow-lg overflow-x-auto'; let tableTotal = 0; const tableRowsHTML = items.map((item, index) => { const safe_cod = item.cod.replace(/\//g, '-'); const config = appData.item_config[safe_cod] || { prUnit: 0.0 }; const peso = (item.linkedPesoKeys || []).reduce((sum, key) => sum + (appData.pesos_carnes[key] || 0), 0); const prUnit = config.prUnit; const total = peso * prUnit; tableTotal += total; return `<tr class="bg-white border-b hover:bg-stone-50"><td class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">${item.desc}</td><td class="px-4 py-3 text-right"><button data-modelkey="${modelKey}" data-index="${index}" class="link-peso-btn px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">${formatNumber(peso)}</button></td><td class="px-4 py-3 text-right"><input type="text" value="${String(prUnit.toFixed(2)).replace('.',',')}" data-cod="${safe_cod}" class="suino-price-input price-input text-right bg-stone-50 border border-stone-300 rounded-md px-2 py-1 shadow-sm"></td><td class="px-4 py-3 text-right font-semibold">${formatCurrency(total)}</td></tr>`; }).join(''); const lucroPercent = totalLiquidoCustoValor > 0 ? ((tableTotal - totalLiquidoCustoValor) / totalLiquidoCustoValor) * 100 : 0; const profitColor = lucroPercent >= 0 ? 'text-green-600' : 'text-red-600'; container.innerHTML = `<div class="flex justify-between items-center mb-3"><h3 class="font-bold text-lg">${title}</h3><p class="font-bold text-lg ${profitColor}">LUCRO = ${lucroPercent.toFixed(2).replace('.',',')}%</p></div><table class="w-full text-sm text-left text-stone-500"><thead class="text-xs text-stone-700 uppercase bg-stone-50"><tr><th scope="col" class="px-4 py-3">Descrição</th><th scope="col" class="px-4 py-3 text-right">Peso</th><th scope="col" class="px-4 py-3 text-right">Pr. Unit.</th><th scope="col" class="px-4 py-3 text-right">Preço Total</th></tr></thead><tbody>${tableRowsHTML}</tbody><tfoot><tr class="font-semibold text-stone-900 bg-stone-50"><th scope="row" colspan="3" class="px-4 py-3 text-base text-right">Total Bruto de Venda</th><td class="px-4 py-3 text-base text-right">${formatCurrency(tableTotal)}</td></tr></tfoot></table>`; return container; };
-        const buildBoiTable = () => { const container = document.getElementById('boi-table-container'); const items = appData.itens_database.boi || []; const tableRowsHTML = items.map(item => { const safe_cod = item.cod.replace(/\//g, '-'); const config = appData.item_config[safe_cod] || {}; const precoPago = item.precoPago || 0; const precoVenda = config.precoVenda || 0; const precoFormula = (((precoPago * 0.0605) + precoPago) * 100 / 92) * 1.07; return `<tr class="bg-white border-b hover:bg-stone-50"><td class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">${item.desc}</td><td class="px-4 py-3">${item.cod}</td><td class="px-4 py-3 text-right">${formatCurrency(precoPago)}</td><td class="px-4 py-3 text-right font-semibold text-blue-600">${formatCurrency(precoFormula)}</td><td class="px-4 py-3 text-right"><input type="text" value="${String(precoVenda.toFixed(2)).replace('.',',')}" data-cod="${safe_cod}" class="boi-price-input price-input text-right bg-stone-50 border border-stone-300 rounded-md px-2 py-1 shadow-sm"></td></tr>`; }).join(''); container.innerHTML = `<table class="w-full text-sm text-left text-stone-500"><thead class="text-xs text-stone-700 uppercase bg-stone-50"><tr><th scope="col" class="px-4 py-3">Descrição</th><th scope="col" class="px-4 py-3">Código</th><th scope="col" class="px-4 py-3 text-right">Preço Pago</th><th scope="col" class="px-4 py-3 text-right">Preço Fórmula</th><th scope="col" class="px-4 py-3 text-right">Preço Venda</th></tr></thead><tbody>${tableRowsHTML}</tbody></table>`; };
-        const buildAllSuinoTables = () => { const suinoContainer = document.getElementById('suino-tables-container'); suinoContainer.innerHTML = ''; suinoContainer.appendChild(buildSuinoTable('modelo1', 'Modelo 1: Pá, Carré com osso | Pernil, Costela limpa')); suinoContainer.appendChild(buildSuinoTable('modelo2', 'Modelo 2: Pá, Carré, Pernil com osso | Costela limpa')); };
-        const openPesoManager = () => { const pesoRows = Object.entries(appData.pesos_carnes).map(([key, value]) => `<div class="grid grid-cols-3 gap-2 items-center mb-2 peso-row"><input class="col-span-2 px-2 py-1 border rounded" data-original-key="${key}" value="${key}"><input type="text" class="px-2 py-1 border rounded text-right" value="${String(value).replace('.',',')}"></div>`).join(''); const content = `<h2 class="text-xl font-bold mb-4">Gerenciar Pesos (Balanço)</h2><div id="peso-list">${pesoRows}</div><div class="flex justify-between mt-4"><button id="add-peso-btn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Adicionar Peso</button><div><button onclick="document.getElementById('modal-container').classList.add('hidden')" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button><button id="save-pesos-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button></div></div>`; showModal(content); };
-        const openCorteManager = () => { const content = `<h2 class="text-xl font-bold mb-4">Gerenciar Cortes</h2><div class="border-b border-gray-200"><nav id="corte-tabs" class="-mb-px flex space-x-4" aria-label="Tabs"><button data-tab="modelo1" class="tab-button active">Modelo 1</button><button data-tab="modelo2" class="tab-button">Modelo 2</button><button data-tab="boi" class="tab-button">Boi</button></nav></div><div id="corte-tab-content" class="mt-4"></div><div class="flex justify-end mt-4"><button onclick="document.getElementById('modal-container').classList.add('hidden')" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Fechar</button></div>`; showModal(content); buildCorteTab('modelo1'); };
-        const buildCorteTab = (modelKey) => { const container = document.getElementById('corte-tab-content'); const items = appData.itens_database[modelKey] || []; const isBoi = modelKey === 'boi'; const headers = isBoi ? '<th>Descrição</th><th>Código</th><th>Preço Pago</th>' : '<th>Descrição</th><th>Código</th>'; const rows = items.map((item, index) => `<tr class="hover:bg-stone-100"><td class="py-1 px-2">${item.desc}</td><td class="py-1 px-2">${item.cod}</td>${isBoi ? `<td class="py-1 px-2">${formatCurrency(item.precoPago)}</td>` : ''}<td class="py-1 px-2 text-right"><button data-modelkey="${modelKey}" data-index="${index}" class="edit-corte-btn text-sm text-blue-600 hover:underline">Editar</button><button data-modelkey="${modelKey}" data-index="${index}" class="delete-corte-btn text-sm text-red-600 hover:underline ml-2">Excluir</button></td></tr>`).join(''); container.innerHTML = `<table class="w-full text-left text-sm"><thead><tr>${headers}<th>Ações</th></tr></thead><tbody>${rows}</tbody></table><button data-modelkey="${modelKey}" class="add-corte-btn mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Adicionar Corte</button>`; };
-        const openCorteEditor = (modelKey, index = -1) => { const isEdit = index !== -1; const item = isEdit ? appData.itens_database[modelKey][index] : { desc: '', cod: '', precoPago: 0 }; const isBoi = modelKey === 'boi'; const title = isEdit ? 'Editar Corte' : 'Adicionar Corte'; const precoPagoField = isBoi ? `<label class="block mt-2">Preço Pago<input id="corte-preco-pago" class="w-full border rounded px-2 py-1 mt-1" value="${item.precoPago}"></label>` : ''; const editorContent = `<div class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50" id="editor-backdrop"><div class="bg-white p-6 rounded-lg shadow-xl w-96"><h3 class="text-lg font-bold mb-4">${title}</h3><label class="block">Descrição<input id="corte-desc" class="w-full border rounded px-2 py-1 mt-1" value="${item.desc}"></label><label class="block mt-2">Código<input id="corte-cod" class="w-full border rounded px-2 py-1 mt-1" value="${item.cod}"></label>${precoPagoField}<div class="flex justify-end mt-4"><button id="cancel-corte-editor" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button><button id="save-corte-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', editorContent); document.getElementById('save-corte-btn').onclick = () => saveCorte(modelKey, index); document.getElementById('cancel-corte-editor').onclick = () => document.getElementById('editor-backdrop').remove(); document.getElementById('editor-backdrop').onclick = (e) => { if(e.target.id === 'editor-backdrop') e.currentTarget.remove(); }; };
-        const saveCorte = (modelKey, index) => { const desc = document.getElementById('corte-desc').value.trim(); const cod = document.getElementById('corte-cod').value.trim(); if(!desc || !cod) { alert('Descrição e Código são obrigatórios.'); return; } const newItem = { desc, cod, linkedPesoKeys: index !== -1 ? appData.itens_database[modelKey][index].linkedPesoKeys : [] }; if (modelKey === 'boi') { newItem.precoPago = parseFloatBR(document.getElementById('corte-preco-pago').value); } if (index === -1) { appData.itens_database[modelKey].push(newItem); } else { appData.itens_database[modelKey][index] = newItem; } document.getElementById('editor-backdrop').remove(); buildCorteTab(modelKey); };
-        const openLinkWeightsModal = (modelKey, index) => { const item = appData.itens_database[modelKey][index]; const linkedKeys = new Set(item.linkedPesoKeys || []); const pesoCheckboxes = Object.keys(appData.pesos_carnes).sort().map(key => `<label class="block"><input type="checkbox" class="mr-2" value="${key}" ${linkedKeys.has(key) ? 'checked' : ''}>${key}</label>`).join(''); const content = `<h2 class="text-xl font-bold mb-4">Vincular Pesos para: ${item.desc}</h2><div id="link-peso-list" class="space-y-1">${pesoCheckboxes}</div><div class="flex justify-end mt-4"><button onclick="document.getElementById('modal-container').classList.add('hidden')" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button><button id="save-linked-pesos-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button></div>`; showModal(content); document.getElementById('save-linked-pesos-btn').onclick = () => { const newLinkedKeys = Array.from(document.querySelectorAll('#link-peso-list input:checked')).map(cb => cb.value); item.linkedPesoKeys = newLinkedKeys; hideModal(); render(); }; };
-        
-        // --- Initial Load & Event Listeners ---
-        async function initializeApp() {
-            const savedConfig = localStorage.getItem('githubConfig');
-            if (savedConfig) {
-                githubConfig = JSON.parse(savedConfig);
-                document.getElementById('github-user').value = githubConfig.user;
-                document.getElementById('github-repo').value = githubConfig.repo;
-                document.getElementById('github-token').value = githubConfig.token;
+
+        // --- Main Render Function ---
+        const render = () => {
+            const sheetsContainer = document.getElementById('sheets-container');
+            sheetsContainer.innerHTML = '';
+            appData.sheets.forEach(sheet => {
+                sheetsContainer.appendChild(buildSheetElement(sheet));
+            });
+        };
+
+        // --- Element Builders ---
+        function buildSheetElement(sheet) {
+            const sheetContainer = document.createElement('section');
+            sheetContainer.className = 'bg-white p-4 sm:p-6 rounded-lg shadow-lg space-y-4';
+            sheetContainer.dataset.sheetId = sheet.id;
+
+            let headerHTML = `
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">${sheet.title}</h2>
+                    <div>
+                        <button class="edit-sheet-title-btn px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">Renomear</button>
+                        <button class="delete-sheet-btn px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">Excluir</button>
+                    </div>
+                </div>`;
+            sheetContainer.innerHTML = headerHTML;
+            
+            if (sheet.type === 'suino') {
+                const totalCustoLiquido = calculateSheetCost(sheet);
+                const costCalculator = document.createElement('div');
+                costCalculator.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-2">Cálculo de Custo da Ficha</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 cost-calculator-inputs">
+                        ${buildCostInput('peso_materia_prima', 'Peso Matéria-Prima (Kg)', sheet.cost_inputs.peso_materia_prima)}
+                        ${buildCostInput('preco_unit_materia_prima', 'Preço Unitário (R$)', sheet.cost_inputs.preco_unit_materia_prima)}
+                        ${buildCostInput('st_percent', 'ST (%)', sheet.cost_inputs.st_percent)}
+                        ${buildCostInput('fator_rendimento', 'Fator Rendimento (%)', sheet.cost_inputs.fator_rendimento)}
+                    </div>
+                    <div class="flex justify-end items-center text-lg font-bold mt-4 pt-4 border-t">
+                        <span class="text-stone-600 mr-4">TOTAL LÍQUIDO CUSTO:</span>
+                        <span class="text-indigo-700">${formatCurrency(totalCustoLiquido)}</span>
+                    </div>`;
+                sheetContainer.appendChild(costCalculator);
+                const tableContainer = document.createElement('div');
+                tableContainer.className = "overflow-x-auto";
+                tableContainer.innerHTML = buildSuinoItemsTable(sheet, totalCustoLiquido);
+                sheetContainer.appendChild(tableContainer);
+            } else if (sheet.type === 'boi_caixaria') {
+                const tableContainer = document.createElement('div');
+                tableContainer.className = "overflow-x-auto";
+                tableContainer.innerHTML = buildBoiItemsTable(sheet);
+                sheetContainer.appendChild(tableContainer);
             }
 
+            return sheetContainer;
+        }
+
+        function buildCostInput(id, label, value) {
+            return `<div>
+                        <label class="block text-sm font-medium text-stone-700">${label}</label>
+                        <input type="text" data-key="${id}" value="${value}" class="cost-input mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                    </div>`;
+        }
+        
+        function buildSuinoItemsTable(sheet, totalCustoLiquido) {
+            let tableTotalVenda = 0;
+            const tableRowsHTML = sheet.items.map(item => {
+                const peso = (item.linkedPesoKeys || []).reduce((sum, key) => sum + (appData.pesos_carnes[key] || 0), 0);
+                const totalVendaItem = peso * item.prUnit;
+                tableTotalVenda += totalVendaItem;
+                return `
+                    <tr class="bg-white border-b hover:bg-stone-50">
+                        <td class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">${item.desc}</td>
+                        <td class="px-4 py-3 text-right">
+                            <button data-item-id="${item.id}" class="link-peso-btn px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">${formatNumber(peso)}</button>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <input type="text" value="${String(item.prUnit.toFixed(2)).replace('.',',')}" data-item-id="${item.id}" class="item-price-input price-input text-right bg-stone-50 border border-stone-300 rounded-md px-2 py-1 shadow-sm">
+                        </td>
+                        <td class="px-4 py-3 text-right font-semibold">${formatCurrency(totalVendaItem)}</td>
+                    </tr>`;
+            }).join('');
+
+            const lucroPercent = totalCustoLiquido > 0 ? ((tableTotalVenda - totalCustoLiquido) / totalCustoLiquido) * 100 : 0;
+            const profitColor = lucroPercent >= 0 ? 'text-green-600' : 'text-red-600';
+
+            return `
+                <div class="flex justify-between items-center my-4">
+                    <h3 class="text-lg font-semibold">Itens da Ficha</h3>
+                    <button class="manage-sheet-cortes-btn px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">Gerenciar Cortes</button>
+                    <p class="font-bold text-lg ${profitColor}">LUCRO = ${lucroPercent.toFixed(2).replace('.',',')}%</p>
+                </div>
+                <table class="w-full text-sm text-left text-stone-500">
+                    <thead class="text-xs text-stone-700 uppercase bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Descrição</th>
+                            <th scope="col" class="px-4 py-3 text-right">Peso</th>
+                            <th scope="col" class="px-4 py-3 text-right">Pr. Unit.</th>
+                            <th scope="col" class="px-4 py-3 text-right">Preço Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRowsHTML}</tbody>
+                    <tfoot>
+                        <tr class="font-semibold text-stone-900 bg-stone-50">
+                            <th scope="row" colspan="3" class="px-4 py-3 text-base text-right">Total Bruto de Venda</th>
+                            <td class="px-4 py-3 text-base text-right">${formatCurrency(tableTotalVenda)}</td>
+                        </tr>
+                    </tfoot>
+                </table>`;
+        }
+
+        function buildBoiItemsTable(sheet) {
+            const tableRowsHTML = sheet.items.map(item => {
+                const precoPago = item.precoPago || 0;
+                const precoVenda = item.precoVenda || 0;
+                const precoFormula = (((precoPago * 0.0605) + precoPago) * 100 / 92) * 1.07;
+                return `
+                    <tr class="bg-white border-b hover:bg-stone-50">
+                        <td class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">${item.desc}</td>
+                        <td class="px-4 py-3">${item.cod}</td>
+                        <td class="px-4 py-3 text-right">
+                            <input type="text" value="${String(precoPago.toFixed(2)).replace('.',',')}" data-item-id="${item.id}" class="boi-pagoprice-input price-input text-right bg-stone-50 border border-stone-300 rounded-md px-2 py-1 shadow-sm">
+                        </td>
+                        <td class="px-4 py-3 text-right font-semibold text-blue-600">${formatCurrency(precoFormula)}</td>
+                        <td class="px-4 py-3 text-right">
+                            <input type="text" value="${String(precoVenda.toFixed(2)).replace('.',',')}" data-item-id="${item.id}" class="boi-vendaprice-input price-input text-right bg-stone-50 border border-stone-300 rounded-md px-2 py-1 shadow-sm">
+                        </td>
+                    </tr>`;
+            }).join('');
+            return `
+                <div class="flex justify-between items-center my-4">
+                     <h3 class="text-lg font-semibold">Itens da Ficha</h3>
+                     <button class="manage-sheet-cortes-btn px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">Gerenciar Carnes</button>
+                </div>
+                <table class="w-full text-sm text-left text-stone-500">
+                    <thead class="text-xs text-stone-700 uppercase bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Descrição</th>
+                            <th scope="col" class="px-4 py-3">Código</th>
+                            <th scope="col" class="px-4 py-3 text-right">Preço Pago</th>
+                            <th scope="col" class="px-4 py-3 text-right">Preço Fórmula</th>
+                            <th scope="col" class="px-4 py-3 text-right">Preço Venda</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRowsHTML}</tbody>
+                </table>`;
+        }
+        
+        // --- Calculation Logic ---
+        const calculateSheetCost = (sheet) => {
+            const { peso_materia_prima, preco_unit_materia_prima, st_percent, fator_rendimento } = sheet.cost_inputs;
+            const peso = parseFloatBR(peso_materia_prima);
+            const pr_unit = parseFloatBR(preco_unit_materia_prima);
+            const st = parseFloatBR(st_percent);
+            const fat = parseFloatBR(fator_rendimento);
+            const total_materia_prima = peso * pr_unit;
+            const st_total = total_materia_prima * (st / 100.0);
+            const custo_com_st = total_materia_prima + st_total;
+            return (fat !== 0) ? (custo_com_st / fat) * 100.0 : 0;
+        };
+
+        // --- Management Modals & Logic ---
+        const openPesoManager = () => {
+            const pesoRows = Object.entries(appData.pesos_carnes).map(([key, value]) => `
+                <div class="grid grid-cols-3 gap-2 items-center mb-2 peso-row">
+                    <input class="col-span-2 px-2 py-1 border rounded" data-original-key="${key}" value="${key}">
+                    <input type="text" class="px-2 py-1 border rounded text-right" value="${String(value).replace('.',',')}">
+                </div>`).join('');
+            const content = `<h2 class="text-xl font-bold mb-4">Gerenciar Pesos (Balanço)</h2><div id="peso-list">${pesoRows}</div><div class="flex justify-between mt-4"><button id="add-peso-btn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Adicionar Peso</button><div><button onclick="document.getElementById('modal-container').classList.add('hidden')" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button><button id="save-pesos-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button></div></div>`;
+            showModal(content);
+        };
+        
+        const openCorteManager = (sheet) => {
+            const isBoi = sheet.type === 'boi_caixaria';
+            const headers = isBoi ? '<th>Descrição</th><th>Código</th><th>Preço Pago</th>' : '<th>Descrição</th><th>Código</th>';
+            const rows = sheet.items.map((item, index) => `
+                <tr class="hover:bg-stone-100">
+                    <td class="py-1 px-2">${item.desc}</td>
+                    <td class="py-1 px-2">${item.cod}</td>
+                    ${isBoi ? `<td class="py-1 px-2">${formatCurrency(item.precoPago)}</td>` : ''}
+                    <td class="py-1 px-2 text-right">
+                        <button data-index="${index}" class="edit-corte-btn text-sm text-blue-600 hover:underline">Editar</button>
+                        <button data-index="${index}" class="delete-corte-btn text-sm text-red-600 hover:underline ml-2">Excluir</button>
+                    </td>
+                </tr>`).join('');
+            const content = `
+                <h2 class="text-xl font-bold mb-4">Gerenciar Cortes: ${sheet.title}</h2>
+                <table class="w-full text-left text-sm"><thead><tr>${headers}<th>Ações</th></tr></thead><tbody>${rows}</tbody></table>
+                <div class="flex justify-between mt-4">
+                    <button class="add-corte-btn mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Adicionar Corte</button>
+                    <button onclick="hideModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Fechar</button>
+                </div>`;
+            showModal(content);
+            
+            modalContent.querySelector('.add-corte-btn').onclick = () => openCorteEditor(sheet, -1);
+            modalContent.querySelectorAll('.edit-corte-btn').forEach(btn => btn.onclick = () => openCorteEditor(sheet, parseInt(btn.dataset.index)));
+            modalContent.querySelectorAll('.delete-corte-btn').forEach(btn => btn.onclick = () => {
+                if(confirm('Tem certeza que deseja excluir este corte?')) {
+                    sheet.items.splice(parseInt(btn.dataset.index), 1);
+                    openCorteManager(sheet); // Re-render manager
+                }
+            });
+        };
+
+        const openCorteEditor = (sheet, index) => {
+            const isEdit = index !== -1;
+            const item = isEdit ? sheet.items[index] : { id: `item_${Date.now()}`, desc: '', cod: '', prUnit: 0, precoPago: 0 };
+            const isBoi = sheet.type === 'boi_caixaria';
+            const title = isEdit ? 'Editar Corte' : 'Adicionar Corte';
+            const precoPagoField = isBoi ? `<label class="block mt-2">Preço Pago<input id="corte-preco-pago" class="w-full border rounded px-2 py-1 mt-1" value="${item.precoPago || 0}"></label>` : '';
+            
+            const editorContent = `<div class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50" id="editor-backdrop">
+                <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+                    <h3 class="text-lg font-bold mb-4">${title}</h3>
+                    <label class="block">Descrição<input id="corte-desc" class="w-full border rounded px-2 py-1 mt-1" value="${item.desc}"></label>
+                    <label class="block mt-2">Código<input id="corte-cod" class="w-full border rounded px-2 py-1 mt-1" value="${item.cod}"></label>
+                    ${precoPagoField}
+                    <div class="flex justify-end mt-4">
+                        <button id="cancel-corte-editor" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button>
+                        <button id="save-corte-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
+                    </div>
+                </div></div>`;
+            document.body.insertAdjacentHTML('beforeend', editorContent);
+
+            const closeEditor = () => document.getElementById('editor-backdrop')?.remove();
+            
+            document.getElementById('save-corte-btn').onclick = () => {
+                const desc = document.getElementById('corte-desc').value.trim();
+                const cod = document.getElementById('corte-cod').value.trim();
+                if(!desc || !cod) { alert('Descrição e Código são obrigatórios.'); return; }
+                
+                item.desc = desc;
+                item.cod = cod;
+                if (isBoi) item.precoPago = parseFloatBR(document.getElementById('corte-preco-pago').value);
+                
+                if (!isEdit) sheet.items.push(item);
+                
+                closeEditor();
+                openCorteManager(sheet);
+            };
+            document.getElementById('cancel-corte-editor').onclick = closeEditor;
+            document.getElementById('editor-backdrop').onclick = (e) => { if(e.target.id === 'editor-backdrop') closeEditor(); };
+        };
+        
+        const openLinkWeightsModal = (sheet, itemId) => {
+            const item = sheet.items.find(i => i.id === itemId);
+            if (!item) return;
+            const linkedKeys = new Set(item.linkedPesoKeys || []);
+            const pesoCheckboxes = Object.keys(appData.pesos_carnes).sort().map(key => `<label class="block"><input type="checkbox" class="mr-2" value="${key}" ${linkedKeys.has(key) ? 'checked' : ''}>${key}</label>`).join('');
+            const content = `<h2 class="text-xl font-bold mb-4">Vincular Pesos para: ${item.desc}</h2><div id="link-peso-list" class="space-y-1">${pesoCheckboxes}</div><div class="flex justify-end mt-4"><button onclick="hideModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 mr-2">Cancelar</button><button id="save-linked-pesos-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button></div>`;
+            showModal(content);
+            document.getElementById('save-linked-pesos-btn').onclick = () => {
+                item.linkedPesoKeys = Array.from(document.querySelectorAll('#link-peso-list input:checked')).map(cb => cb.value);
+                hideModal();
+                render();
+            };
+        };
+
+        // --- Initial Load & Event Listeners ---
+        async function initializeApp() {
+            // Splash Screen Logic
+            const splashScreen = document.getElementById('splash-screen');
+            const githubSettingsModal = document.getElementById('github-settings-modal');
+            const introVideo = document.getElementById('intro-video');
+            const skipIntroBtn = document.getElementById('skip-intro-btn');
+            function enterApp() { if (!splashScreen.classList.contains('hidden')) { splashScreen.classList.add('opacity-0', 'transition-opacity', 'duration-500'); setTimeout(() => { splashScreen.classList.add('hidden'); githubSettingsModal.classList.remove('hidden'); }, 500); } }
+            introVideo.addEventListener('ended', enterApp);
+            skipIntroBtn.addEventListener('click', enterApp);
+            introVideo.addEventListener('error', () => { enterApp(); });
+            
+            // GitHub Connection Logic
+            const savedConfig = localStorage.getItem('githubConfig');
+            if (savedConfig) { githubConfig = JSON.parse(savedConfig); document.getElementById('github-user').value = githubConfig.user; document.getElementById('github-repo').value = githubConfig.repo; document.getElementById('github-token').value = githubConfig.token; }
             document.getElementById('connect-github-btn').addEventListener('click', async () => {
                 githubConfig.user = document.getElementById('github-user').value.trim();
                 githubConfig.repo = document.getElementById('github-repo').value.trim();
                 githubConfig.token = document.getElementById('github-token').value.trim();
-
-                if (!githubConfig.user || !githubConfig.repo || !githubConfig.token) {
-                    alert('Por favor, preencha todos os campos de configuração.');
-                    return;
-                }
-                
+                if (!githubConfig.user || !githubConfig.repo || !githubConfig.token) { alert('Por favor, preencha todos os campos de configuração.'); return; }
                 localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
-
                 const loadedData = await loadDataFromGitHub();
-                if (loadedData) {
-                    appData = loadedData;
-                } else {
-                    appData = { pesos_carnes: { ...DEFAULT_PESOS_DATABASE }, itens_database: JSON.parse(JSON.stringify(DEFAULT_ITENS_DATABASE)), item_config: {}, cost_inputs: { suino_peso: "47,200", suino_pr_unit: "12,00", st_percent: "6,05", fator: "92,00" } };
-                    Object.values(appData.itens_database).flat().forEach(item => { const safe_cod = item.cod.replace(/\//g, '-'); if (!appData.item_config[safe_cod]) appData.item_config[safe_cod] = { prUnit: 0.0 }; if (item.precoPago && !appData.item_config[safe_cod].precoVenda) appData.item_config[safe_cod].precoVenda = 0.0; });
-                }
-                
-                document.getElementById('github-settings-modal').classList.add('hidden');
+                if (loadedData && loadedData.sheets) { appData = loadedData; } 
+                else { appData.pesos_carnes = { ...DEFAULT_PESOS_DATABASE }; appData.sheets = getInitialSheets(); }
+                githubSettingsModal.classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 render();
             });
-
+            
+            // Main App Event Listeners
             document.getElementById('save-button').addEventListener('click', saveDataToGitHub);
             document.getElementById('manage-pesos-btn').addEventListener('click', openPesoManager);
-            document.getElementById('manage-cortes-btn').addEventListener('click', openCorteManager);
-            
-            document.body.addEventListener('change', (e) => { const target = e.target; if (target.classList.contains('suino-price-input')) { const safe_cod = target.dataset.cod; const newValue = parseFloatBR(target.value); if (!isNaN(newValue)) { if (!appData.item_config[safe_cod]) appData.item_config[safe_cod] = {}; appData.item_config[safe_cod].prUnit = newValue; render(); } } if (target.classList.contains('boi-price-input')) { const safe_cod = target.dataset.cod; const newValue = parseFloatBR(target.value); if (!isNaN(newValue)) { if (!appData.item_config[safe_cod]) appData.item_config[safe_cod] = {}; appData.item_config[safe_cod].precoVenda = newValue; render(); } } });
-            document.body.addEventListener('click', e => { if(e.target.id === 'add-peso-btn') { const list = document.getElementById('peso-list'); const newRow = document.createElement('div'); newRow.className = 'grid grid-cols-3 gap-2 items-center mb-2 peso-row'; newRow.innerHTML = `<input class="col-span-2 px-2 py-1 border rounded" placeholder="Nome do Novo Peso"><input type="text" class="px-2 py-1 border rounded text-right" value="0,000">`; list.appendChild(newRow); } if(e.target.id === 'save-pesos-btn') { const newPesos = {}; document.querySelectorAll('.peso-row').forEach(row => { const keyInput = row.children[0]; const valueInput = row.children[1]; const key = keyInput.value.trim(); if(key) newPesos[key] = parseFloatBR(valueInput.value); }); appData.pesos_carnes = newPesos; hideModal(); render(); } if(e.target.classList.contains('tab-button')) { document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); e.target.classList.add('active'); buildCorteTab(e.target.dataset.tab); } if(e.target.classList.contains('add-corte-btn')) openCorteEditor(e.target.dataset.modelkey); if(e.target.classList.contains('edit-corte-btn')) openCorteEditor(e.target.dataset.modelkey, parseInt(e.target.dataset.index)); if(e.target.classList.contains('delete-corte-btn')) { if(confirm('Tem certeza que deseja excluir este corte?')) { appData.itens_database[e.target.dataset.modelkey].splice(parseInt(e.target.dataset.index), 1); buildCorteTab(e.target.dataset.modelkey); } } if(e.target.classList.contains('link-peso-btn')) { openLinkWeightsModal(e.target.dataset.modelkey, parseInt(e.target.dataset.index)); } });
+            document.getElementById('add-sheet-btn').addEventListener('click', () => {
+                const newTitle = prompt("Digite o nome da nova ficha:", "Nova Ficha Suína");
+                if (newTitle) { appData.sheets.push(createDefaultSheet(newTitle)); render(); }
+            });
+
+            document.body.addEventListener('change', e => {
+                const sheetDiv = e.target.closest('[data-sheet-id]');
+                if (!sheetDiv) return;
+                const sheet = appData.sheets.find(s => s.id === sheetDiv.dataset.sheetId);
+                if (!sheet) return;
+                if (e.target.classList.contains('cost-input')) { sheet.cost_inputs[e.target.dataset.key] = e.target.value; render(); }
+                const itemId = e.target.dataset.itemId;
+                if (!itemId) return;
+                const item = sheet.items.find(i => i.id === itemId);
+                if (!item) return;
+                if (e.target.classList.contains('item-price-input')) { item.prUnit = parseFloatBR(e.target.value); render(); }
+                if (e.target.classList.contains('boi-pagoprice-input')) { item.precoPago = parseFloatBR(e.target.value); render(); }
+                if (e.target.classList.contains('boi-vendaprice-input')) { item.precoVenda = parseFloatBR(e.target.value); render(); }
+            });
+
+            document.body.addEventListener('click', e => {
+                if (e.target.id === 'add-peso-btn') { document.getElementById('peso-list').insertAdjacentHTML('beforeend', `<div class="grid grid-cols-3 gap-2 items-center mb-2 peso-row"><input class="col-span-2 px-2 py-1 border rounded" placeholder="Nome do Novo Peso"><input type="text" class="px-2 py-1 border rounded text-right" value="0,000"></div>`); }
+                if (e.target.id === 'save-pesos-btn') { const newPesos = {}; document.querySelectorAll('.peso-row').forEach(row => { const key = row.children[0].value.trim(); if (key) newPesos[key] = parseFloatBR(row.children[1].value); }); appData.pesos_carnes = newPesos; hideModal(); render(); }
+                const sheetDiv = e.target.closest('[data-sheet-id]');
+                if (!sheetDiv) return;
+                const sheet = appData.sheets.find(s => s.id === sheetDiv.dataset.sheetId);
+                if (!sheet) return;
+                if (e.target.classList.contains('delete-sheet-btn')) { if (confirm(`Tem certeza que deseja excluir a ficha "${sheet.title}"?`)) { appData.sheets = appData.sheets.filter(s => s.id !== sheet.id); render(); } }
+                if (e.target.classList.contains('edit-sheet-title-btn')) { const newTitle = prompt("Digite o novo nome para a ficha:", sheet.title); if (newTitle) { sheet.title = newTitle; render(); } }
+                if (e.target.classList.contains('manage-sheet-cortes-btn')) { openCorteManager(sheet); }
+                if (e.target.classList.contains('link-peso-btn')) { openLinkWeightsModal(sheet, e.target.dataset.itemId); }
+            });
         }
 
         initializeApp();
